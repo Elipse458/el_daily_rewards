@@ -3,44 +3,40 @@ local timecache = {}
 
 Citizen.CreateThread(function()
 	TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-	while ESX==nil do Wait(1) end
-	MySQL.Async.fetchAll("SELECT identifier,next_collect FROM `daily_free`",{},function(data)
-		for k,v in ipairs(data) do
-			timecache[v.identifier]=v.next_collect
-		end
+    while ESX==nil do Wait(0) end
+end)
+
+Citizen.CreateThread(function()
+	MySQL.ready(function()
+		MySQL.Async.fetchAll("SELECT identifier,next_collect FROM `daily_free`",{},function(data)
+			for k,v in ipairs(data) do
+				timecache[v.identifier]=v.next_collect
+			end
+		end)
 	end)
 end)
 
-AddEventHandler('es:playerLoaded', function(source)
-	local _source = source
-	local identifier = ESX.GetPlayerFromId(_source).identifier
-	local now = os.time()
-	MySQL.Async.fetchAll('SELECT * FROM `daily_free` WHERE `identifier`=@identifier;', {['@identifier'] = identifier}, function(collect)
-		if collect[1] then
-			TriggerClientEvent("free:setTimeout", source, collect[1].next_collect + 300)
-			timecache[identifier]=collect[1].next_collect + 300
-		else
-			MySQL.Async.execute('INSERT INTO `daily_free` (`identifier`, `next_collect`, `times_collected`) VALUES (@identifier, @nextcollect, 0);', {['@identifier'] = identifier, ['@nextcollect'] = now}, nil)
-			TriggerClientEvent("free:setTimeout", source, now + 300)
-			timecache[identifier]=now + 300
-		end
-	end)
-end)
+function getSteamIdentifier(identifiers)
+	for k,v in ipairs(identifiers) do
+		if v:find("steam") then return v end
+	end
+	return nil
+end
 
 RegisterServerEvent("free:updateTimeout")
 AddEventHandler("free:updateTimeout", function()
-	local _source = source
-	local identifier = ESX.GetPlayerFromId(_source).identifier
+	local identifier = getSteamIdentifier(GetPlayerIdentifiers(source))
+	if not identifier then return end
 	local now = os.time()
 	if timecache[identifier] then
-		TriggerClientEvent("free:setTimeout", _source, timecache[identifier])
+		TriggerClientEvent("free:setTimeout", source, timecache[identifier])
 	else
 		MySQL.Async.fetchAll('SELECT `next_collect` FROM `daily_free` WHERE `identifier`=@identifier;', {['@identifier'] = identifier}, function(collect)
 			if collect[1] then
-				TriggerClientEvent("free:setTimeout", _source, collect[1].next_collect)
+				TriggerClientEvent("free:setTimeout", source, collect[1].next_collect)
 				timecache[identifier] = collect[1].next_collect
 			else
-				TriggerClientEvent("free:setTimeout", _source, 0)
+				TriggerClientEvent("free:setTimeout", source, 0)
 				timecache[identifier] = 0
 			end
 		end)

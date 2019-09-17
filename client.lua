@@ -1,3 +1,7 @@
+AddEventHandler('esx:playerLoader', function(xPlayer)
+	TriggerServerEvent("free:updateTimeout")
+end)
+
 RegisterNetEvent("free:toggleFreeMenu")
 AddEventHandler("free:toggleFreeMenu", function(state)
 	SetNuiFocus(state, state)
