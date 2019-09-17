@@ -14,6 +14,18 @@ Reward your players for playing on your server
 Commands:
 - /daily <- opens daily rewards menu
 
+## Errors? Read this first before complaining
+If you're getting something like this:
+```
+SCRIPT ERROR: @es_extended/server/classes/player.lua:320: attempt to index a nil value (local 'item')
+> ref (@es_extended/server/classes/player.lua:320)
+> giveItem (@el_daily_rewards/server.lua:57)
+> claimRewards (@el_daily_rewards/server.lua:71)
+> ref (@el_daily_rewards/server.lua:103)
+> setImmediate (@mysql-async/mysql-async.js:14898)
+```
+that means that one or more items in your config don't exist in your database
+
 ## Important notes
 This also silently stores how many times a player has redeemed their reward, i thought it could be useful. *(only in database)*  
 If you rename the folder to something else than `el_daily_rewards`, **it will break things**.  
