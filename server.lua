@@ -1,5 +1,5 @@
 ESX = nil
-local timecache = {}
+local timecache,collecting = {},{}
 
 Citizen.CreateThread(function()
 	TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -70,6 +70,8 @@ end
 RegisterServerEvent("free:collect")
 AddEventHandler("free:collect", function(t)
 	local _source = source
+	if collecting[_source] then return end
+	collecting[_source]=true -- small cache, this fixes dupe bug
 	local xPlayer = ESX.GetPlayerFromId(_source)
 	local identifier = xPlayer.identifier
 	local now = os.time()
@@ -78,6 +80,7 @@ AddEventHandler("free:collect", function(t)
 		if timecache[identifier] > now then
 			TriggerClientEvent("free:setTimeout", _source, timecache[identifier])
 			TriggerClientEvent("chat:addMessage", _source, {color={255,0,0}, multiline=false, args={"Daily Free", "It's still not time..."}})
+			collecting[_source]=nil
 			return
 		end
 	end
@@ -101,6 +104,7 @@ AddEventHandler("free:collect", function(t)
 			MySQL.Async.execute('INSERT INTO `daily_free` (`identifier`, `next_collect`, `times_collected`) VALUES (@identifier, @nextcollect, 1);', {['@identifier'] = identifier, ['@nextcollect'] = nextcollect}, nil)
 		end
 	end)
+	collecting[_source]=nil
 end)
 
 TriggerEvent('es:addCommand', 'daily', function(source, args, user)
