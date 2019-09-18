@@ -1,4 +1,4 @@
-AddEventHandler('esx:playerLoader', function(xPlayer)
+AddEventHandler('esx:playerLoaded', function(xPlayer)
 	TriggerServerEvent("free:updateTimeout")
 end)
 

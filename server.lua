@@ -25,18 +25,19 @@ end
 
 RegisterServerEvent("free:updateTimeout")
 AddEventHandler("free:updateTimeout", function()
-	local identifier = getSteamIdentifier(GetPlayerIdentifiers(source))
+	local _source = source
+	local identifier = getSteamIdentifier(GetPlayerIdentifiers(_source))
 	if not identifier then return end
 	local now = os.time()
 	if timecache[identifier] then
-		TriggerClientEvent("free:setTimeout", source, timecache[identifier])
+		TriggerClientEvent("free:setTimeout", _source, timecache[identifier])
 	else
 		MySQL.Async.fetchAll('SELECT `next_collect` FROM `daily_free` WHERE `identifier`=@identifier;', {['@identifier'] = identifier}, function(collect)
 			if collect[1] then
-				TriggerClientEvent("free:setTimeout", source, collect[1].next_collect)
+				TriggerClientEvent("free:setTimeout", _source, collect[1].next_collect)
 				timecache[identifier] = collect[1].next_collect
 			else
-				TriggerClientEvent("free:setTimeout", source, 0)
+				TriggerClientEvent("free:setTimeout", _source, 0)
 				timecache[identifier] = 0
 			end
 		end)
