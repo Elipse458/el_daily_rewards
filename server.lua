@@ -57,7 +57,14 @@ end
 
 function claimRewards(xPlayer)
 	if Config.random_rewards_enabled then
-		for k,v in ipairs(Config.random_rewards[math.random(0,#Config.random_rewards)]) do
+		local weighedlist = {}
+		for k,v in ipairs(Config.random_rewards) do
+			local chance = v.chance; v.chance = nil
+			for i=1,chance do
+				table.insert(weighedlist,v)
+			end
+		end
+		for k,v in ipairs(weighedlist[math.random(0,#weighedlist)]) do
 			giveItem(v,xPlayer)
 		end
 	else

@@ -24,9 +24,10 @@ Config.rewards = {
     }
 }
 
-Config.random_rewards_enabled = false
+Config.random_rewards_enabled = true
 Config.random_rewards = {
     {
+        chance = 90, -- this can be any whole number (higher = better chance)
         {
             type = type.money,
             value = 1000
@@ -41,6 +42,7 @@ Config.random_rewards = {
         }
     },
     {
+        chance = 10,
         {
             type = type.item,
             item = "test",
