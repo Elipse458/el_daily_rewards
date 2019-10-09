@@ -23,6 +23,13 @@ function getSteamIdentifier(identifiers)
 	return nil
 end
 
+function copyTbl(obj) -- why? because lua is kinda cancer with table copying
+	if type(obj) ~= 'table' then return obj end
+	local res = {}
+	for k, v in pairs(obj) do res[copy1(k)] = copy1(v) end
+	return res
+end
+
 RegisterServerEvent("free:updateTimeout")
 AddEventHandler("free:updateTimeout", function()
 	local _source = source
@@ -58,7 +65,7 @@ end
 function claimRewards(xPlayer)
 	if Config.random_rewards_enabled then
 		local weighedlist = {}
-		for k,v in ipairs(Config.random_rewards) do
+		for k,v in ipairs(copyTbl(Config.random_rewards)) do
 			local chance = v.chance; v.chance = nil
 			for i=1,chance do
 				table.insert(weighedlist,v)
