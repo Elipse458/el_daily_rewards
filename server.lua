@@ -26,7 +26,7 @@ end
 function copyTbl(obj) -- why? because lua is kinda cancer with table copying
 	if type(obj) ~= 'table' then return obj end
 	local res = {}
-	for k, v in pairs(obj) do res[copy1(k)] = copy1(v) end
+	for k, v in pairs(obj) do res[copyTbl(k)] = copyTbl(v) end
 	return res
 end
 
