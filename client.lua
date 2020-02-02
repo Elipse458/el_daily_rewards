@@ -1,3 +1,4 @@
+RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
 	TriggerServerEvent("free:updateTimeout")
 end)
