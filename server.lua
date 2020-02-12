@@ -63,8 +63,8 @@ function giveItem(it,xPlayer)
 end
 
 function claimRewards(xPlayer)
-	if Config.random_rewards_enabled then
-		local weighedlist = {}
+local weighedlist = {}
+	if Config.random_rewards_enabled then	
 		for k,v in ipairs(copyTbl(Config.random_rewards)) do
 			local chance = v.chance; v.chance = nil
 			for i=1,chance do
