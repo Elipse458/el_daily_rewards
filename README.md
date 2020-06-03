@@ -1,6 +1,8 @@
-# el_daily_rewards
+# [UNSUPPORTED] el_daily_rewards
 Daily rewards for FiveM  
 Reward your players for playing on your server
+
+## RE-RELEASE BY @Raw_Gaming [HERE](https://forum.cfx.re/t/re-release-esx-daily-rewards-updated-1-2-15-2-20/1016265)
 
 ## Installation
 1. Download the [resource](https://github.com/Elipse458/el_daily_rewards/archive/master.zip)
